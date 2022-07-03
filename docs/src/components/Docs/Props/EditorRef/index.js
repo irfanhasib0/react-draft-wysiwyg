@@ -12,7 +12,7 @@ export default () => (
       value={
         'const setEditorReference = (ref) => {\n' +
         '  this.editorReferece = ref;\n' +
-        '  ref.focus();\n' +
+        '  ref.focusEditor();\n' +
         '}\n' +
         '\n\n' +
         'const EditorWithRef = () => (\n' +

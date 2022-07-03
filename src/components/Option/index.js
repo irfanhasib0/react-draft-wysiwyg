@@ -17,10 +17,6 @@ export default class Option extends Component {
     title: PropTypes.string,
   };
 
-  static defaultProps = {
-    activeClassName: '',
-  }
-
   onClick: Function = () => {
     const { disabled, onClick, value } = this.props;
     if (!disabled) {

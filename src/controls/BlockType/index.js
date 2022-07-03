@@ -1,3 +1,5 @@
+/* @flow */
+
 import React, { Component } from 'react';
 import PropTypes from 'prop-types';
 import { getSelectedBlocksType } from 'draftjs-utils';
@@ -14,44 +16,47 @@ class BlockType extends Component {
     translations: PropTypes.object,
   };
 
-  constructor(props) {
-    super(props);
-    const { editorState, modalHandler } = props;
-    this.state = {
-      expanded: false,
-      currentBlockType: editorState
-        ? getSelectedBlocksType(editorState)
-        : 'unstyled',
-    };
-    modalHandler.registerCallBack(this.expandCollapse);
-  }
+  state: Object = {
+    expanded: false,
+    currentBlockType: 'unstyled',
+  };
 
-  componentDidUpdate(prevProps) {
-    const { editorState } = this.props;
-    if (editorState && editorState !== prevProps.editorState) {
+  componentWillMount(): void {
+    const { editorState, modalHandler } = this.props;
+    if (editorState) {
       this.setState({
         currentBlockType: getSelectedBlocksType(editorState),
       });
     }
+    modalHandler.registerCallBack(this.expandCollapse);
   }
 
-  componentWillUnmount() {
+  componentWillReceiveProps(properties: Object): void {
+    if (properties.editorState &&
+      this.props.editorState !== properties.editorState) {
+      this.setState({
+        currentBlockType: getSelectedBlocksType(properties.editorState),
+      });
+    }
+  }
+
+  componentWillUnmount(): void {
     const { modalHandler } = this.props;
     modalHandler.deregisterCallBack(this.expandCollapse);
   }
 
-  onExpandEvent = () => {
+  onExpandEvent: Function = (): void => {
     this.signalExpanded = !this.state.expanded;
   };
 
-  expandCollapse = () => {
+  expandCollapse: Function = (): void => {
     this.setState({
       expanded: this.signalExpanded,
     });
     this.signalExpanded = false;
-  };
+  }
 
-  blocksTypes = [
+  blocksTypes: Array<Object> = [
     { label: 'Normal', style: 'unstyled' },
     { label: 'H1', style: 'header-one' },
     { label: 'H2', style: 'header-two' },
@@ -63,35 +68,35 @@ class BlockType extends Component {
     { label: 'Code', style: 'code' },
   ];
 
-  doExpand = () => {
+  doExpand: Function = (): void => {
     this.setState({
       expanded: true,
     });
   };
 
-  doCollapse = () => {
+  doCollapse: Function = (): void => {
     this.setState({
       expanded: false,
     });
   };
 
-  toggleBlockType = blockType => {
-    const blockTypeValue = this.blocksTypes.find(bt => bt.label === blockType)
-      .style;
+  toggleBlockType: Function = (blockType: string) => {
+    const blockTypeValue = this.blocksTypes.find(bt => bt.label === blockType).style;
     const { editorState, onChange } = this.props;
-    const newState = RichUtils.toggleBlockType(editorState, blockTypeValue);
+    const newState = RichUtils.toggleBlockType(
+      editorState,
+      blockTypeValue,
+    );
     if (newState) {
       onChange(newState);
     }
   };
 
-  render() {
+  render(): Object {
     const { config, translations } = this.props;
     const { expanded, currentBlockType } = this.state;
     const BlockTypeComponent = config.component || LayoutComponent;
-    const blockType = this.blocksTypes.find(
-      bt => bt.style === currentBlockType
-    );
+    const blockType = this.blocksTypes.find(bt => bt.style === currentBlockType);
     return (
       <BlockTypeComponent
         config={config}

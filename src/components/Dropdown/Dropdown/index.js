@@ -1,3 +1,5 @@
+/* @flow */
+
 import React, { Component } from 'react';
 import PropTypes from 'prop-types';
 import classNames from 'classnames';
@@ -19,20 +21,19 @@ export default class Dropdown extends Component {
     title: PropTypes.string,
   };
 
-  state = {
+  state: Object = {
     highlighted: -1,
   };
 
-  componentDidUpdate(prevProps) {
-    const { expanded } = this.props;
-    if (prevProps.expanded && !expanded) {
+  componentWillReceiveProps(props) {
+    if (this.props.expanded && !props.expanded) {
       this.setState({
         highlighted: -1,
       });
     }
   }
 
-  onChange = value => {
+  onChange: Function = (value: any): void => {
     const { onChange } = this.props;
     if (onChange) {
       onChange(value);
@@ -40,13 +41,13 @@ export default class Dropdown extends Component {
     this.toggleExpansion();
   };
 
-  setHighlighted = highlighted => {
+  setHighlighted: Function = (highlighted: number): void => {
     this.setState({
       highlighted,
     });
   };
 
-  toggleExpansion = () => {
+  toggleExpansion: Function = (): void => {
     const { doExpand, doCollapse, expanded } = this.props;
     if (expanded) {
       doCollapse();
@@ -86,29 +87,24 @@ export default class Dropdown extends Component {
             })}
           />
         </a>
-        {expanded ? (
+        {expanded ?
           <ul
-            className={classNames(
-              'rdw-dropdown-optionwrapper',
-              optionWrapperClassName
-            )}
+            className={classNames('rdw-dropdown-optionwrapper', optionWrapperClassName)}
             onClick={stopPropagation}
           >
-            {React.Children.map(options, (option, index) => {
-              const temp =
-                option &&
-                React.cloneElement(option, {
-                  onSelect: this.onChange,
-                  highlighted: highlighted === index,
-                  setHighlighted: this.setHighlighted,
-                  index,
-                });
-              return temp;
-            })}
-          </ul>
-        ) : (
-          undefined
-        )}
+            {
+              React.Children.map(options, (option, index) => {
+                const temp = option && React.cloneElement(
+                  option, {
+                    onSelect: this.onChange,
+                    highlighted: highlighted === index,
+                    setHighlighted: this.setHighlighted,
+                    index,
+                  });
+                return temp;
+              })
+            }
+          </ul> : undefined}
       </div>
     );
   }

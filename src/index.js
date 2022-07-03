@@ -1,3 +1,7 @@
 /* @flow */
 
-export { default as Editor } from "./Editor";
+import Editor from './Editor';
+
+module.exports = {
+  Editor,
+};

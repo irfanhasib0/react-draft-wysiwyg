@@ -24,14 +24,14 @@ class ConvertToRawDraftContent extends Component {
           separator: ' ',
           trigger: '@',
           suggestions: [
-            { text: 'APPLE', value: 'apple', url: 'apple' },
-            { text: 'BANANA', value: 'banana', url: 'banana' },
-            { text: 'CHERRY', value: 'cherry', url: 'cherry' },
-            { text: 'DURIAN', value: 'durian', url: 'durian' },
-            { text: 'EGGFRUIT', value: 'eggfruit', url: 'eggfruit' },
-            { text: 'FIG', value: 'fig', url: 'fig' },
-            { text: 'GRAPEFRUIT', value: 'grapefruit', url: 'grapefruit' },
-            { text: 'HONEYDEW', value: 'honeydew', url: 'honeydew' },
+            { text: 'APPLE', value: 'apple', url: 'apple', id: 'apple_id' },
+            { text: 'BANANA', value: 'banana', url: 'banana', id: 'banana_id' },
+            { text: 'CHERRY', value: 'cherry', url: 'cherry', id: 'cherry_id' },
+            { text: 'DURIAN', value: 'durian', url: 'durian', id: 'durian_id' },
+            { text: 'EGGFRUIT', value: 'eggfruit', url: 'eggfruit', id: 'eggfruit_id' },
+            { text: 'FIG', value: 'fig', url: 'fig', id: 'fig_id' },
+            { text: 'GRAPEFRUIT', value: 'grapefruit', url: 'grapefruit', id: 'grapefruit_id' },
+            { text: 'HONEYDEW', value: 'honeydew', url: 'honeydew', id: 'honeydew_id' },
           ],
         }}
         editorState={editorState}

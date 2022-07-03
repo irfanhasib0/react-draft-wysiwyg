@@ -23,12 +23,6 @@ export default class DropDownOption extends Component {
     title: PropTypes.string,
   };
 
-  static defaultProps = {
-    activeClassName: '',
-    disabledClassName: '',
-    highlightedClassName: ''
-  }
-
   onClick: Function = (event): void => {
     const { onSelect, onClick, value, disabled } = this.props;
     if (!disabled) {

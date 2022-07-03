@@ -1,13 +1,14 @@
 const path = require('path');
 const webpack = require('webpack');
-const MiniCssExtractPlugin = require('mini-css-extract-plugin');
+const ExtractTextPlugin = require('extract-text-webpack-plugin');
 const autoprefixer = require('autoprefixer');
 const precss = require('precss');
-const UglifyJsPlugin = require('uglifyjs-webpack-plugin');
 
 module.exports = {
   devtool: 'source-map',
-  entry: ['./src/index'],
+  entry: [
+    './src/index',
+  ],
   output: {
     path: path.join(__dirname, '../dist'),
     filename: 'react-draft-wysiwyg.js',
@@ -20,20 +21,18 @@ module.exports = {
     'react-dom': 'react-dom',
     'draft-js': 'draft-js',
   },
-  optimization: {
-    minimizer: [new UglifyJsPlugin()],
-  },
   plugins: [
     new webpack.DefinePlugin({
       'process.env': {
         NODE_ENV: JSON.stringify('production'),
       },
     }),
-    new MiniCssExtractPlugin({
-      filename: 'react-draft-wysiwyg.css',
-      chunkFilename: '[id].css',
-      ignoreOrder: false,
+    new webpack.optimize.UglifyJsPlugin({
+      compressor: {
+        warnings: false,
+      },
     }),
+    new ExtractTextPlugin('react-draft-wysiwyg.css'),
     new webpack.LoaderOptionsPlugin({
       options: {
         postcss: [autoprefixer, precss],
@@ -41,29 +40,19 @@ module.exports = {
     }),
   ],
   module: {
-    rules: [
-      {
-        test: /\.js$/,
-        use: [{ loader: 'babel-loader' }],
-        exclude: /immutable\.js$|draftjs-utils\.js$/,
-      },
+    loaders: [
+      { test: /\.js$/, loader: 'babel-loader', exclude: /immutable\.js$|draftjs-utils\.js$/ },
       {
         test: /\.css$/,
-        use: [
-          {
-            loader: MiniCssExtractPlugin.loader,
-            options: {
-              publicPath: '../',
-              hmr: process.env.NODE_ENV === 'development',
-            },
-          },
-          'css-loader',
-        ],
+        loader: ExtractTextPlugin.extract({
+          fallback: 'style-loader',
+          use: 'css-loader?modules&importLoaders=1&localIdentName=[local]!postcss-loader',
+        }),
       },
-      { test: /\.(png|jpg)$/, use: [{ loader: 'url-loader?limit=8192' }] },
+      { test: /\.(png|jpg)$/, loader: 'url-loader?limit=8192' },
       {
         test: /\.svg(\?v=\d+\.\d+\.\d+)?$/,
-        use: [{ loader: 'url-loader?limit=10000&mimetype=image/svg+xml' }],
+        loader: 'url-loader?limit=10000&mimetype=image/svg+xml',
       },
     ],
   },

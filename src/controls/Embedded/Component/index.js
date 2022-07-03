@@ -1,3 +1,5 @@
+/* @flow */
+
 import React, { Component } from 'react';
 import PropTypes from 'prop-types';
 import classNames from 'classnames';
@@ -7,7 +9,7 @@ import Option from '../../../components/Option';
 import './styles.css';
 
 class LayoutComponent extends Component {
-  static propTypes = {
+  static propTypes: Object = {
     expanded: PropTypes.bool,
     onExpandEvent: PropTypes.func,
     onChange: PropTypes.func,
@@ -16,16 +18,15 @@ class LayoutComponent extends Component {
     doCollapse: PropTypes.func,
   };
 
-  state = {
+  state: Object = {
     embeddedLink: '',
     height: this.props.config.defaultSize.height,
     width: this.props.config.defaultSize.width,
   };
 
-  componentDidUpdate(prevProps) {
-    const { expanded, config } = this.props;
-    if (!expanded && prevProps.expanded) {
-      const { height, width } = config.defaultSize;
+  componentWillReceiveProps(props) {
+    if (this.props.expanded && !props.expanded) {
+      const { height, width } = this.props.config.defaultSize;
       this.setState({
         embeddedLink: '',
         height,
@@ -34,25 +35,21 @@ class LayoutComponent extends Component {
     }
   }
 
-  onChange = () => {
+  onChange: Function = (): void => {
     const { onChange } = this.props;
     const { embeddedLink, height, width } = this.state;
     onChange(embeddedLink, height, width);
   };
 
-  updateValue = event => {
+  updateValue: Function = (event: Object): void => {
     this.setState({
       [`${event.target.name}`]: event.target.value,
     });
   };
 
-  rendeEmbeddedLinkModal() {
+  rendeEmbeddedLinkModal(): Object {
     const { embeddedLink, height, width } = this.state;
-    const {
-      config: { popupClassName },
-      doCollapse,
-      translations,
-    } = this.props;
+    const { config: { popupClassName }, doCollapse, translations } = this.props;
     return (
       <div
         className={classNames('rdw-embedded-modal', popupClassName)}
@@ -68,9 +65,7 @@ class LayoutComponent extends Component {
           <span className="rdw-embedded-modal-link-input-wrapper">
             <input
               className="rdw-embedded-modal-link-input"
-              placeholder={
-                translations['components.controls.embedded.enterlink']
-              }
+              placeholder={translations['components.controls.embedded.enterlink']}
               onChange={this.updateValue}
               onBlur={this.updateValue}
               value={embeddedLink}
@@ -124,7 +119,7 @@ class LayoutComponent extends Component {
     );
   }
 
-  render() {
+  render(): Object {
     const {
       config: { icon, className, title },
       expanded,
@@ -144,7 +139,10 @@ class LayoutComponent extends Component {
           onClick={onExpandEvent}
           title={title || translations['components.controls.embedded.embedded']}
         >
-          <img src={icon} alt="" />
+          <img
+            src={icon}
+            alt=""
+          />
         </Option>
         {expanded ? this.rendeEmbeddedLinkModal() : undefined}
       </div>

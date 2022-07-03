@@ -1,5 +1,4 @@
-require('@babel/core');
-
+require('babel-core/register');
 function noop() {
   return null;
 }

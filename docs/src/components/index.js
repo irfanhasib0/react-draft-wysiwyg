@@ -1,7 +1,15 @@
 /* @flow */
 
-export { default as App } from './App';
-export { default as Home } from './Home';
-export { default as Demo } from './Demo';
-export { default as Docs } from './Docs';
-export { default as Author } from './Author';
+import App from './App';
+import Home from './Home';
+import Demo from './Demo';
+import Docs from './Docs';
+import Author from './Author';
+
+module.exports = {
+  App,
+  Home,
+  Demo,
+  Docs,
+  Author,
+};

@@ -1,3 +1,5 @@
+/* @flow */
+
 import React, { Component } from 'react';
 import PropTypes from 'prop-types';
 import { EditorState, Modifier } from 'draft-js';
@@ -17,35 +19,35 @@ export default class Remove extends Component {
 
   state = {
     expanded: false,
-  };
+  }
 
-  componentDidMount() {
+  componentWillMount(): void {
     const { modalHandler } = this.props;
     modalHandler.registerCallBack(this.expandCollapse);
   }
 
-  componentWillUnmount() {
+  componentWillUnmount(): void {
     const { modalHandler } = this.props;
     modalHandler.deregisterCallBack(this.expandCollapse);
   }
 
-  onExpandEvent = () => {
+  onExpandEvent: Function = (): void => {
     this.signalExpanded = !this.state.expanded;
   };
 
-  expandCollapse = () => {
+  expandCollapse: Function = (): void => {
     this.setState({
       expanded: this.signalExpanded,
     });
     this.signalExpanded = false;
-  };
+  }
 
-  removeInlineStyles = () => {
+  removeInlineStyles: Function = (): void => {
     const { editorState, onChange } = this.props;
     onChange(this.removeAllInlineStyles(editorState));
   };
 
-  removeAllInlineStyles = editorState => {
+  removeAllInlineStyles: Function = (editorState: EditorState): void => {
     let contentState = editorState.getCurrentContent();
     [
       'BOLD',
@@ -55,25 +57,20 @@ export default class Remove extends Component {
       'MONOSPACE',
       'SUPERSCRIPT',
       'SUBSCRIPT',
-    ].forEach(style => {
+    ].forEach((style) => {
       contentState = Modifier.removeInlineStyle(
         contentState,
         editorState.getSelection(),
-        style
+        style,
       );
     });
-    const customStyles = getSelectionCustomInlineStyle(editorState, [
-      'FONTSIZE',
-      'FONTFAMILY',
-      'COLOR',
-      'BGCOLOR',
-    ]);
+    const customStyles = getSelectionCustomInlineStyle(editorState, ['FONTSIZE', 'FONTFAMILY', 'COLOR', 'BGCOLOR']);
     forEach(customStyles, (key, value) => {
       if (value) {
         contentState = Modifier.removeInlineStyle(
           contentState,
           editorState.getSelection(),
-          value
+          value,
         );
       }
     });
@@ -81,19 +78,19 @@ export default class Remove extends Component {
     return EditorState.push(editorState, contentState, 'change-inline-style');
   };
 
-  doExpand = () => {
+  doExpand: Function = (): void => {
     this.setState({
       expanded: true,
     });
   };
 
-  doCollapse = () => {
+  doCollapse: Function = (): void => {
     this.setState({
       expanded: false,
     });
   };
 
-  render() {
+  render(): Object {
     const { config, translations } = this.props;
     const { expanded } = this.state;
     const RemoveComponent = config.component || LayoutComponent;

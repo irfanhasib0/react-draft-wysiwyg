@@ -1,3 +1,5 @@
+/* @flow */
+
 import React, { Component } from 'react';
 import PropTypes from 'prop-types';
 import { AtomicBlockUtils } from 'draft-js';
@@ -5,7 +7,7 @@ import { AtomicBlockUtils } from 'draft-js';
 import LayoutComponent from './Component';
 
 class ImageControl extends Component {
-  static propTypes = {
+  static propTypes: Object = {
     editorState: PropTypes.object.isRequired,
     onChange: PropTypes.func.isRequired,
     modalHandler: PropTypes.object,
@@ -13,44 +15,44 @@ class ImageControl extends Component {
     translations: PropTypes.object,
   };
 
-  constructor(props) {
-    super(props);
+  state: Object = {
+    expanded: false,
+  };
+
+  componentWillMount(): void {
     const { modalHandler } = this.props;
-    this.state = {
-      expanded: false,
-    };
     modalHandler.registerCallBack(this.expandCollapse);
   }
 
-  componentWillUnmount() {
+  componentWillUnmount(): void {
     const { modalHandler } = this.props;
     modalHandler.deregisterCallBack(this.expandCollapse);
   }
 
-  onExpandEvent = () => {
+  onExpandEvent: Function = (): void => {
     this.signalExpanded = !this.state.expanded;
   };
 
-  doExpand = () => {
+  doExpand: Function = (): void => {
     this.setState({
       expanded: true,
     });
   };
 
-  doCollapse = () => {
+  doCollapse: Function = (): void => {
     this.setState({
       expanded: false,
     });
   };
 
-  expandCollapse = () => {
+  expandCollapse: Function = (): void => {
     this.setState({
       expanded: this.signalExpanded,
     });
     this.signalExpanded = false;
-  };
+  }
 
-  addImage = (src, height, width, alt) => {
+  addImage: Function = (src: string, height: string, width: string, alt: string): void => {
     const { editorState, onChange, config } = this.props;
     const entityData = { src, height, width };
     if (config.alt.present) {
@@ -63,13 +65,13 @@ class ImageControl extends Component {
     const newEditorState = AtomicBlockUtils.insertAtomicBlock(
       editorState,
       entityKey,
-      ' '
+      ' ',
     );
     onChange(newEditorState);
     this.doCollapse();
   };
 
-  render() {
+  render(): Object {
     const { config, translations } = this.props;
     const { expanded } = this.state;
     const ImageComponent = config.component || LayoutComponent;
